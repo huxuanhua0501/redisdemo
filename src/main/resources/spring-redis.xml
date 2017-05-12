@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <bean id="redisService" class="net.xuanhuahu.core.common.redis.RedisUtils"/>
+    <context:property-placeholder location="classpath:/config.properties"
+                                  ignore-unresolvable="true"/>
+    <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis_max_active}"></property>
+        <property name="maxIdle" value="${redis_max_idle}"></property>
+        <property name="maxWaitMillis" value="${redis_max_wait}"></property>
+        <property name="testOnBorrow" value="${redis_test_on_borrow}"></property>
+    </bean>
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis_addr}"></property>
+        <property name="port" value="${redis_port}"></property>
+        <property name="password" value="${redis_auth}"></property>
+        <property name="poolConfig" ref="jedisConfig"></property>
+        <property name="database" value="${redis_database}"></property>
+    </bean>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <!-- 如果不配置Serializer，那么存储的时候智能使用String，如果用User类型存储，那么会提示错误User can't cast to String！！！ -->
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+    </bean>
+
+    <bean id="redisConstant" class="net.xuanhuahu.core.common.redis.RedisConstant">
+        <constructor-arg>
+            <map>
+                <entry key="reidstable" value="10"/>
+                <!-- <entry key="onLineMember" value="30"/>
+                 <entry key="netPriceCache" value="86400"/>
+                 <entry key="expressPriceCache" value="86400"/>
+                 <entry key="nearCompAndPersionCache" value="300"/>
+                 <entry key="compSendRangeCache" value="3600"/>
+                 <entry key="compElectronicFenceCache" value="3600"/>
+                 <entry key="nearSiteCache" value="3600"/>
+                 <entry key="appVersionInfoCacheOfExpress" value="600"/>-->
+            </map>
+        </constructor-arg>
+    </bean>
+    <!-- *********************redis相关配置*************************** -->
+</beans>
