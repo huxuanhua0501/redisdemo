@@ -115,6 +115,14 @@ public class RedisUtils {
         return redisTemplate.opsForList().rightPop(key);
     }
 
+    /**
+     * queue 消息队列模式
+     * @param channel
+     * @param message
+     */
+    public void sendMessage(String channel, Object message) {
+        redisTemplate.convertAndSend(channel,message);
+    }
 //    public boolean getByName(String cacheName) {
 //        if (cacheName == null || "".equals(cacheName)) {
 //            return false;

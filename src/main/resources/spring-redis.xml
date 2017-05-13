@@ -2,8 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:redis="http://www.springframework.org/schema/redis"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis-1.0.xsd">
 
 
     <bean id="redisService" class="net.xuanhuahu.core.common.redis.RedisUtils"/>
@@ -40,5 +42,48 @@
             </map>
         </constructor-arg>
     </bean>
+
+  <!--  <bean id="redisQueueListener" class="net.xuanhuahu.learn.redis.queue.RedisQueueListener"/>-->
+
+    <bean id="myMessageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <bean class="net.xuanhuahu.learn.redis.queue.RedisQueueListener"/>
+        </constructor-arg>
+    </bean>
+    <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer" >
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="messageListeners">
+            <map>
+                <entry key-ref="myMessageListener">
+                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                        <constructor-arg value="redisqueue" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!--定义redis容器-->
+<!--    <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        &lt;!&ndash;定义reids容器的监听器&ndash;&gt;
+        <property name="redisQueueListeners">
+            <map>
+                <entry key-ref="redisQueueListener">
+                    &lt;!&ndash;定义发送的频道&ndash;&gt;
+                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                        &lt;!&ndash;以news.开头的所有的频道都能接收到消息&ndash;&gt;
+                        <constructor-arg value="redisqueue.*"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>-->
+
+<!--  <redis:listener-container connection-factory="connectionFactory">
+        <redis:listener ref="myMessageListener" method="handleMessage"
+                        serializer="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" topic="redisqueue"/>
+    </redis:listener-container>-->
+
     <!-- *********************redis相关配置*************************** -->
 </beans>

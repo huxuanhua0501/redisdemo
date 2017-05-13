@@ -52,4 +52,8 @@ public class RedisController {
     public String rightPop() {
         return learnRedisService.rigthPop();
     }
+    @GetMapping("redisQueue")
+    public  void redisQueue(String channel,String message){
+        learnRedisService.sendMessage(channel, message);
+    }
 }

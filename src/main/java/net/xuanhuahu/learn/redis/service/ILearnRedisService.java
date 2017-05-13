@@ -13,4 +13,5 @@ public interface ILearnRedisService {
     public String leftPop();
     public  void  rightPush(String text);
     public  String rigthPop();
+    public void sendMessage(String channel, Object message);
 }

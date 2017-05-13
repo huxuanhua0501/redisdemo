@@ -47,4 +47,9 @@ public class LearnRedisService implements ILearnRedisService {
     public String rigthPop() {
         return redisUtils.rightPop("go_02");
     }
+
+    @Override
+    public void sendMessage(String channel, Object message) {
+        redisUtils.sendMessage(channel,message);
+    }
 }
