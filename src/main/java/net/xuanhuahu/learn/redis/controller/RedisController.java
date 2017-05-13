@@ -20,15 +20,36 @@ public class RedisController {
     private ILearnRedisService learnRedisService;
 
     @GetMapping("/insertKey")
-    public String insertKey(){
-       learnRedisService.insertRedis();
+    public String insertKey() {
+        learnRedisService.insertRedis();
 //        Map<String, Object> map = learnRedisService.getRedis();
 //        System.err.println(map);
         return null;
     }
+
     @GetMapping("/getValue")
-    public  String getValue(){
+    public String getValue() {
         Map<String, Object> map = learnRedisService.getRedis();
         return JSON.toJSONString(map);
+    }
+
+    @GetMapping("leftpush")
+    public void leftpush(String text) {
+        learnRedisService.leftPush(text);
+    }
+
+    @GetMapping("leftpop")
+    public String leftpop() {
+        return learnRedisService.leftPop();
+    }
+
+    @GetMapping("rightPush")
+    public void rightPush(String text) {
+        learnRedisService.rightPush(text);
+    }
+
+    @GetMapping("rightPop")
+    public String rightPop() {
+        return learnRedisService.rigthPop();
     }
 }

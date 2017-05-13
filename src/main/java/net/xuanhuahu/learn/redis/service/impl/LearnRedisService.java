@@ -27,4 +27,24 @@ public class LearnRedisService implements ILearnRedisService {
     public Map getRedis() {
         return redisUtils.get("reidstable","key_01",Map.class);
     }
+
+    @Override
+    public void leftPush(String text) {
+        redisUtils.leftpush("go_01", text);
+    }
+
+    @Override
+    public String leftPop() {
+        return redisUtils.leftpop("go_01");
+    }
+
+    @Override
+    public void rightPush(String text) {
+        redisUtils.rightPush("go_02",text);
+    }
+
+    @Override
+    public String rigthPop() {
+        return redisUtils.rightPop("go_02");
+    }
 }

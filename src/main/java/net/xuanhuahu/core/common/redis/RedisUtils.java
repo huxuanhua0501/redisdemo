@@ -25,8 +25,13 @@ public class RedisUtils {
     @Autowired
     private RedisConstant redisConstant;
 
+    /**
+     * 存数据，并设定失效时间
+     * @param cacheName
+     * @param key
+     * @param value
+     */
     public void put(String cacheName, String key, String value) {
-//		boolean bool = redisTemplate.hasKey(cacheName);
         if (cacheName == null || "".equals(cacheName) || key == null || "".equals(key)) {
             return;
         }
@@ -40,6 +45,12 @@ public class RedisUtils {
         }
     }
 
+    /**
+     * 同上
+     * @param cacheName
+     * @param key
+     * @param value
+     */
     public void put(String cacheName, String key, Object value) {
         if (cacheName == null || "".equals(cacheName) || key == null || "".equals(key)) {
             return;
@@ -52,7 +63,12 @@ public class RedisUtils {
             redisTemplate.expire(cacheName, expireTime, TimeUnit.SECONDS);
         }
     }
-
+    /**
+     * 取数据
+     * @param cacheName
+     * @param key
+     * @param
+     */
     public <T> T get(String cacheName, String key, Class<T> className) {
         Object obj = redisTemplate.opsForHash().get(cacheName, key);
         if (obj == null) {
@@ -61,125 +77,163 @@ public class RedisUtils {
         return JSON.parseObject("" + obj, className);
     }
 
-    public boolean getByName(String cacheName) {
-        if (cacheName == null || "".equals(cacheName)) {
-            return false;
-        }
-        return redisTemplate.hasKey(cacheName);
+    /**
+     * 压栈,先进后出
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public Long leftpush(String key, String value) {
+        return redisTemplate.opsForList().leftPush(key, value);
     }
-
-    public boolean getByKey(String cacheName, String key) {
-        if (cacheName == null || "".equals(cacheName) || key == null || "".equals(key)) {
-            return false;
-        }
-        return redisTemplate.opsForHash().hasKey(cacheName, key);
-    }
-
-    public <T> List<T> getAll(String cacheName, Class<T> className) {
-
-        if (cacheName == null || "".equals(cacheName)) {
-            return null;
-        }
-
-        Set<Object> keys = redisTemplate.opsForHash().keys(cacheName);
-
-        List<T> datas = new ArrayList<T>();
-
-        for (Object obj : keys) {
-            datas.add(get(cacheName, obj + "", className));
-        }
-        if (datas.size() == 0) {
-            return null;
-        }
-
-        return datas;
-    }
-
-    public void remove(String cacheName, String key) {
-        if (cacheName == null || "".equals(cacheName) || key == null || "".equals(key)) {
-            return;
-        }
-        redisTemplate.opsForHash().delete(cacheName, key);
-    }
-
-    public void remove(String cacheName, List<String> keys) {
-        if (cacheName == null || "".equals(cacheName) || keys == null || keys.size() == 0) {
-            return;
-        }
-        for (String key : keys) {
-            redisTemplate.opsForHash().delete(cacheName, key);
-        }
-    }
-
-    public void removeAll(String cacheName) {
-        if (cacheName == null || "".equals(cacheName)) {
-            return;
-        }
-        redisTemplate.delete(cacheName);
-
+    /**
+     * 出栈,最后压入 的先出
+     *
+     * @param key
+     * @return
+     */
+    public String leftpop(String key) {
+        return redisTemplate.opsForList().leftPop(key);
     }
 
     /**
-     * @param args
+     * 入队，左边入队
+     * @param key
+     * @param value
      */
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
-
+    public void rightPush(String key,String value){
+        redisTemplate.opsForList().rightPush(key,value);
     }
 
-    public String[] findAllName() {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * 如果像这样也是从右边取，那么就是先进后出，反之则先进先出
+     * @param key
+     * @return
+     */
+    public String rightPop(String key) {
+        return redisTemplate.opsForList().rightPop(key);
     }
 
-    public List getValueByKey(String cacheName, String key) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Long getKeyList(String cacheName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public String onlyValue(String cacheName, String key) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public List getAllKeyAndValue(String cacheName, int numPerPage, int pageNum, Long totalCount) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public void lpush(String key, Object obj) {
-        // TODO Auto-generated method stub
-        if (key == null || "".equals(key)) {
-            return;
-        }
-        //放入redis
-        redisTemplate.opsForList().leftPush(key, JSON.toJSONString(obj));
-        long expireTime = redisConstant.getExpireTime("smsRecordCache");
-        //如果不等于-1，则该cacheName配置有过期时间
-        if (expireTime != -1) {
-            redisTemplate.expire(key, expireTime, TimeUnit.DAYS);
-        }
-    }
-
-    public <T> List<T> lpop(String key, Class<T> className) {
-        // TODO Auto-generated method stub
-        List<T> datas = new ArrayList<T>();
-        if (key == null || "".equals(key)) {
-            return datas;
-        }
-        List<String> list = redisTemplate.opsForList().range(key, 0, -1);
-        for (String str : list) {
-            datas.add(JSON.parseObject(str, className));
-        }
-        if (datas.size() == 0) {
-            return datas;
-        }
-
-        return datas;
-    }
+//    public boolean getByName(String cacheName) {
+//        if (cacheName == null || "".equals(cacheName)) {
+//            return false;
+//        }
+//        return redisTemplate.hasKey(cacheName);
+//    }
+//
+//    public boolean getByKey(String cacheName, String key) {
+//        if (cacheName == null || "".equals(cacheName) || key == null || "".equals(key)) {
+//            return false;
+//        }
+//        return redisTemplate.opsForHash().hasKey(cacheName, key);
+//    }
+//
+//    public <T> List<T> getAll(String cacheName, Class<T> className) {
+//
+//        if (cacheName == null || "".equals(cacheName)) {
+//            return null;
+//        }
+//
+//        Set<Object> keys = redisTemplate.opsForHash().keys(cacheName);
+//
+//        List<T> datas = new ArrayList<T>();
+//
+//        for (Object obj : keys) {
+//            datas.add(get(cacheName, obj + "", className));
+//        }
+//        if (datas.size() == 0) {
+//            return null;
+//        }
+//
+//        return datas;
+//    }
+//
+//    public void remove(String cacheName, String key) {
+//        if (cacheName == null || "".equals(cacheName) || key == null || "".equals(key)) {
+//            return;
+//        }
+//        redisTemplate.opsForHash().delete(cacheName, key);
+//    }
+//
+//    public void remove(String cacheName, List<String> keys) {
+//        if (cacheName == null || "".equals(cacheName) || keys == null || keys.size() == 0) {
+//            return;
+//        }
+//        for (String key : keys) {
+//            redisTemplate.opsForHash().delete(cacheName, key);
+//        }
+//    }
+//
+//    public void removeAll(String cacheName) {
+//        if (cacheName == null || "".equals(cacheName)) {
+//            return;
+//        }
+//        redisTemplate.delete(cacheName);
+//
+//    }
+//
+//    /**
+//     * @param args
+//     */
+//    public static void main(String[] args) {
+//        // TODO Auto-generated method stub
+//
+//    }
+//
+//    public String[] findAllName() {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
+//
+//    public List getValueByKey(String cacheName, String key) {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
+//
+//    public Long getKeyList(String cacheName) {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
+//
+//    public String onlyValue(String cacheName, String key) {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
+//
+//    public List getAllKeyAndValue(String cacheName, int numPerPage, int pageNum, Long totalCount) {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
+//
+//    public void lpush(String key, Object obj) {
+//        // TODO Auto-generated method stub
+//        if (key == null || "".equals(key)) {
+//            return;
+//        }
+//        //放入redis
+//        redisTemplate.opsForList().leftPush(key, JSON.toJSONString(obj));
+//        long expireTime = redisConstant.getExpireTime("smsRecordCache");
+//        //如果不等于-1，则该cacheName配置有过期时间
+//        if (expireTime != -1) {
+//            redisTemplate.expire(key, expireTime, TimeUnit.DAYS);
+//        }
+//    }
+//
+//    public <T> List<T> lpop(String key, Class<T> className) {
+//        // TODO Auto-generated method stub
+//        List<T> datas = new ArrayList<T>();
+//        if (key == null || "".equals(key)) {
+//            return datas;
+//        }
+//        List<String> list = redisTemplate.opsForList().range(key, 0, -1);
+//        for (String str : list) {
+//            datas.add(JSON.parseObject(str, className));
+//        }
+//        if (datas.size() == 0) {
+//            return datas;
+//        }
+//
+//        return datas;
+//    }
 }

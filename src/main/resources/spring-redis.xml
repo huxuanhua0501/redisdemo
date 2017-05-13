@@ -37,14 +37,6 @@
         <constructor-arg>
             <map>
                 <entry key="reidstable" value="10"/>
-                <!-- <entry key="onLineMember" value="30"/>
-                 <entry key="netPriceCache" value="86400"/>
-                 <entry key="expressPriceCache" value="86400"/>
-                 <entry key="nearCompAndPersionCache" value="300"/>
-                 <entry key="compSendRangeCache" value="3600"/>
-                 <entry key="compElectronicFenceCache" value="3600"/>
-                 <entry key="nearSiteCache" value="3600"/>
-                 <entry key="appVersionInfoCacheOfExpress" value="600"/>-->
             </map>
         </constructor-arg>
     </bean>

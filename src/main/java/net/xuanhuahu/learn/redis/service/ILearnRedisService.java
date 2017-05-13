@@ -9,4 +9,8 @@ public interface ILearnRedisService {
     public void insertRedis();
 
     public Map getRedis();
+    public  void leftPush(String text);
+    public String leftPop();
+    public  void  rightPush(String text);
+    public  String rigthPop();
 }
