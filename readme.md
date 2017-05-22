@@ -9,5 +9,7 @@ spring-data-redis实现的缓存模式
 
 jredis的研究代码，我会在代码中加标示，加以识别
 
-   *
+   * shardedJedisPool切片源的配置
+   
+   * 实现类似spring-data-redis的功能
 # 共同学习-xuanhua.hu-胡宣化-qq-1084773661
