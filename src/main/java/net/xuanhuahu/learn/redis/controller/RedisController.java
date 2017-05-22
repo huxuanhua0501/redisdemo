@@ -1,6 +1,7 @@
 package net.xuanhuahu.learn.redis.controller;
 
 import com.alibaba.fastjson.JSON;
+import net.xuanhuahu.learn.redis.service.ILearnJRedisService;
 import net.xuanhuahu.learn.redis.service.ILearnRedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,8 @@ import java.util.Map;
 public class RedisController {
     @Autowired
     private ILearnRedisService learnRedisService;
+    @Autowired
+    private ILearnJRedisService learnJRedisService;
 
     @GetMapping("/insertKey")
     public String insertKey() {
@@ -56,4 +59,33 @@ public class RedisController {
     public  void redisQueue(String channel,String message){
         learnRedisService.sendMessage(channel, message);
     }
+    @GetMapping("jreids")
+    public  void jredisT(){
+        learnJRedisService.put();
+//        learnJRedisService.get();
+    }
+    @GetMapping("jreidsG")
+    public  void jredisG(){
+//        learnJRedisService.put();
+        learnJRedisService.get();
+        learnJRedisService.removeSetValue("tt","tt123");
+    }
+
+    @GetMapping("setHset")
+    public  void  setHset(){
+        learnJRedisService.setHSet("meiguo","k","value123");
+    }
+    @GetMapping("getHSet")
+    public  void  hset(){
+        learnJRedisService.getHSet("meiguo","k");
+    }
+    @GetMapping("lpush")
+    public  void  lpush(String value){
+        learnJRedisService.lpush(value);
+    }
+    @GetMapping("rpop")
+    public  void  rpop(){
+        learnJRedisService.rpop();
+    }
+
 }
