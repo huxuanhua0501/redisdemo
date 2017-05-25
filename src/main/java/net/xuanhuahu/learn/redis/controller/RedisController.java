@@ -23,8 +23,8 @@ public class RedisController {
     private ILearnRedisService learnRedisService;
     @Autowired
     private ILearnJRedisService learnJRedisService;
-    @Resource
-    private ILearnJedisClusterService learnJedisClusterService;
+//    @Resource
+//    private ILearnJedisClusterService learnJedisClusterService;
 
     @GetMapping("/insertKey")
     public String insertKey() {
@@ -92,15 +92,15 @@ public class RedisController {
         learnJRedisService.rpop();
     }
 
-    @GetMapping("clusterSet")
-    public  void  clusterSet(){
-        learnJedisClusterService.putCache("key","keyValue");
-    }
-
-    @GetMapping("clusterGet")
-    public  void  clusterGet(){
-        System.err.println(learnJedisClusterService.getValue("key"));
-    }
+//    @GetMapping("clusterSet")
+//    public  void  clusterSet(){
+//        learnJedisClusterService.putCache("key","keyValue");
+//    }
+//
+//    @GetMapping("clusterGet")
+//    public  void  clusterGet(){
+//        System.err.println(learnJedisClusterService.getValue("key"));
+//    }
 
 
 }

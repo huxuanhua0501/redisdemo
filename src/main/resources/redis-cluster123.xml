@@ -42,10 +42,10 @@
       </bean>
   -->
     <bean id="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
-        <property name="maxTotal"  value="88" />
-        <property name="maxIdle"   value="1" />
-        <property name="maxWaitMillis" value="12" />
-        <property name="testOnBorrow" value="true"/>
+        <property name="maxTotal"  value="${redis_max_active}" />
+        <property name="maxIdle"   value="${redis_max_idle}" />
+        <property name="maxWaitMillis" value="${redis_max_wait}" />
+        <property name="testOnBorrow" value="${redis_test_on_borrow}"/>
     </bean>
     <!-- jedisCluster config -->
     <bean id="jedisCluster" class="redis.clients.jedis.JedisCluster">

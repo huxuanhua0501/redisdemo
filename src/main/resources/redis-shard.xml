@@ -9,11 +9,17 @@
     <bean id="redisService" class="net.xuanhuahu.core.common.redis.RedisUtils"/>
     <context:property-placeholder location="classpath:/config.properties"
                                   ignore-unresolvable="true"/>
-    <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig">
+  <!--  <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="${redis_max_active}"></property>
         <property name="maxIdle" value="${redis_max_idle}"></property>
         <property name="maxWaitMillis" value="${redis_max_wait}"></property>
         <property name="testOnBorrow" value="${redis_test_on_borrow}"></property>
+    </bean>-->
+    <bean id="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+        <property name="maxTotal"  value="${redis_max_active}" />
+        <property name="maxIdle"   value="${redis_max_idle}" />
+        <property name="maxWaitMillis" value="${redis_max_wait}" />
+        <property name="testOnBorrow" value="${redis_test_on_borrow}"/>
     </bean>
     <bean id="jedis.shardInfo.default" class="redis.clients.jedis.JedisShardInfo">
         <constructor-arg index="0" value="${redis_addr}" />
@@ -22,7 +28,7 @@
     </bean>
 
     <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
-        <constructor-arg index="0" ref="jedisConfig" />
+        <constructor-arg index="0" ref="genericObjectPoolConfig" />
         <constructor-arg index="1">
             <list>
                 <ref bean="jedis.shardInfo.default" />

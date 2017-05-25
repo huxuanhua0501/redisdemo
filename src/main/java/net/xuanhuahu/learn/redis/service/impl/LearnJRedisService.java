@@ -164,11 +164,11 @@ public class LearnJRedisService implements ILearnJRedisService {
        ShardedJedis shardedJedis = null;
        try{
            shardedJedis = shardedJedisPool.getResource();
-          Collection<Jedis>collection =   shardedJedis.getAllShards();
-          Iterator<Jedis>jedis = collection.iterator();
-          while (jedis.hasNext()){
-              jedis.next().select(9);
-          }
+//          Collection<Jedis>collection =   shardedJedis.getAllShards();
+//          Iterator<Jedis>jedis = collection.iterator();
+//          while (jedis.hasNext()){
+//              jedis.next().select(9);
+//          }
            shardedJedis.lpush("ko",value);
        }finally {
            shardedJedis.close();

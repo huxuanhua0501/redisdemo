@@ -14,5 +14,5 @@
                                   ignore-unresolvable="true"/>
     <import resource="redis-shard.xml"/>
     <import resource="spring-data-redis.xml"/>
-    <import resource="redis-cluster123.xml"/>
+    <!--<import resource="redis-cluster123.xml"/>-->
 </beans>
