@@ -2,12 +2,14 @@ package net.xuanhuahu.learn.redis.controller;
 
 import com.alibaba.fastjson.JSON;
 import net.xuanhuahu.learn.redis.service.ILearnJRedisService;
+import net.xuanhuahu.learn.redis.service.ILearnJedisClusterService;
 import net.xuanhuahu.learn.redis.service.ILearnRedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,8 @@ public class RedisController {
     private ILearnRedisService learnRedisService;
     @Autowired
     private ILearnJRedisService learnJRedisService;
+    @Resource
+    private ILearnJedisClusterService learnJedisClusterService;
 
     @GetMapping("/insertKey")
     public String insertKey() {
@@ -87,5 +91,16 @@ public class RedisController {
     public  void  rpop(){
         learnJRedisService.rpop();
     }
+
+    @GetMapping("clusterSet")
+    public  void  clusterSet(){
+        learnJedisClusterService.putCache("key","keyValue");
+    }
+
+    @GetMapping("clusterGet")
+    public  void  clusterGet(){
+        System.err.println(learnJedisClusterService.getValue("key"));
+    }
+
 
 }

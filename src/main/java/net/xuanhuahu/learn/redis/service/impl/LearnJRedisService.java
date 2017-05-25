@@ -2,10 +2,13 @@ package net.xuanhuahu.learn.redis.service.impl;
 
 import net.xuanhuahu.learn.redis.service.ILearnJRedisService;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
 import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by win7 on 2017/5/22.
@@ -103,6 +106,11 @@ public class LearnJRedisService implements ILearnJRedisService {
         ShardedJedis shardedJedis = null;
         try {
             shardedJedis = shardedJedisPool.getResource();
+            Collection<Jedis> collection  = shardedJedis.getAllShards();
+            Iterator<Jedis>jedisIterator = collection.iterator();
+            while (jedisIterator.hasNext()){
+                System.err.println(jedisIterator.next().getDB());
+            }
             System.err.println(shardedJedis.hget(domain, key));
             return shardedJedis.hget(domain, key);
         } finally {
@@ -156,6 +164,11 @@ public class LearnJRedisService implements ILearnJRedisService {
        ShardedJedis shardedJedis = null;
        try{
            shardedJedis = shardedJedisPool.getResource();
+          Collection<Jedis>collection =   shardedJedis.getAllShards();
+          Iterator<Jedis>jedis = collection.iterator();
+          while (jedis.hasNext()){
+              jedis.next().select(9);
+          }
            shardedJedis.lpush("ko",value);
        }finally {
            shardedJedis.close();

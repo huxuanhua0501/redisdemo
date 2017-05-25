@@ -15,21 +15,6 @@
         <property name="maxWaitMillis" value="${redis_max_wait}"></property>
         <property name="testOnBorrow" value="${redis_test_on_borrow}"></property>
     </bean>
-    <bean id="jedis.shardInfo.default" class="redis.clients.jedis.JedisShardInfo">
-        <constructor-arg index="0" value="${redis_addr}" />
-        <constructor-arg index="1" type="int" value="${redis_port}" />
-        <constructor-arg index="2" type="java.lang.String" value="${redis_addr}" />
-    </bean>
-
-    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
-        <constructor-arg index="0" ref="jedisConfig" />
-        <constructor-arg index="1">
-            <list>
-                <ref bean="jedis.shardInfo.default" />
-            </list>
-        </constructor-arg>
-    </bean>
-
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="hostName" value="${redis_addr}"></property>
         <property name="port" value="${redis_port}"></property>
@@ -56,7 +41,7 @@
         </constructor-arg>
     </bean>
 
-  <!--  <bean id="redisQueueListener" class="net.xuanhuahu.learn.redis.queue.RedisQueueListener"/>-->
+    <!--  <bean id="redisQueueListener" class="net.xuanhuahu.learn.redis.queue.RedisQueueListener"/>-->
 
     <bean id="myMessageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
         <constructor-arg>
@@ -77,26 +62,26 @@
     </bean>
 
     <!--定义redis容器-->
-<!--    <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory"/>
-        &lt;!&ndash;定义reids容器的监听器&ndash;&gt;
-        <property name="redisQueueListeners">
-            <map>
-                <entry key-ref="redisQueueListener">
-                    &lt;!&ndash;定义发送的频道&ndash;&gt;
-                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
-                        &lt;!&ndash;以news.开头的所有的频道都能接收到消息&ndash;&gt;
-                        <constructor-arg value="redisqueue.*"/>
-                    </bean>
-                </entry>
-            </map>
-        </property>
-    </bean>-->
+    <!--    <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+            <property name="connectionFactory" ref="connectionFactory"/>
+            &lt;!&ndash;定义reids容器的监听器&ndash;&gt;
+            <property name="redisQueueListeners">
+                <map>
+                    <entry key-ref="redisQueueListener">
+                        &lt;!&ndash;定义发送的频道&ndash;&gt;
+                        <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                            &lt;!&ndash;以news.开头的所有的频道都能接收到消息&ndash;&gt;
+                            <constructor-arg value="redisqueue.*"/>
+                        </bean>
+                    </entry>
+                </map>
+            </property>
+        </bean>-->
 
-<!--  <redis:listener-container connection-factory="connectionFactory">
-        <redis:listener ref="myMessageListener" method="handleMessage"
-                        serializer="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" topic="redisqueue"/>
-    </redis:listener-container>-->
+    <!--  <redis:listener-container connection-factory="connectionFactory">
+            <redis:listener ref="myMessageListener" method="handleMessage"
+                            serializer="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" topic="redisqueue"/>
+        </redis:listener-container>-->
 
     <!-- *********************redis相关配置*************************** -->
 </beans>
